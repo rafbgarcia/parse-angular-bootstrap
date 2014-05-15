@@ -1,0 +1,10 @@
+.navbar {
+  .navbar-nav {
+    &.user-area {
+      .avatar {
+        height: 18px;
+        border-radius: 3px;
+      }
+    }
+  }
+}
