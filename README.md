@@ -40,7 +40,7 @@ III. Start using
 
 ## Tasks
 
-### Unit tests
+### Unit tests with Karma
 
 If you want to unit test by watching files changes
 
@@ -51,7 +51,7 @@ If you want to just run it
 `$ grunt run_test_unit`
 
 
-### e2e tests with protractor
+### e2e tests with Protractor
 
 `$ grunt test_functional`
 
@@ -73,7 +73,7 @@ If you want to just run it
 
 The MIT License
 
-Copyright (c) 2014 Rafael Garcia
+Copyright (c) 2014 Carlos Villela, Thiago Marano, Rafael Garcia
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
