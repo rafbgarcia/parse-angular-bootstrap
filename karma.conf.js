@@ -11,11 +11,12 @@ module.exports = function (config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'public/assets/config.js',
-      'public/assets/vendor.js',
-      'public/assets/lib.js',
-      'public/assets/helpers.js',
-      'public/assets/models.js',
+      'parse/public/assets/config.js',
+      'parse/public/assets/vendor.js',
+      'parse/public/assets/lib.js',
+      'parse/public/assets/helpers.js',
+      'parse/public/assets/models.js',
+      'parse/public/assets/controllers.js',
       'lib/assets/vendor/bower/angular-mocks/angular-mocks.js',
       'spec/unit/**/*.js'
     ],
