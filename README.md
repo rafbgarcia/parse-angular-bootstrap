@@ -8,8 +8,9 @@ I. Clone the repo and execute:
 
 `$ grunt build`
 
-II. Change your keys at `parse/config/global.js` and Gruntfile.js
+II. Change your keys in `parse/config/global.js` and Gruntfile.js
 
+global.js
 ```json
 "applications": {
   "_default": {
@@ -19,17 +20,11 @@ II. Change your keys at `parse/config/global.js` and Gruntfile.js
       "applicationId": "theAppId",
       "masterKey": "theMasterKey"
   },
-  "parse_angular_bootstrap_tests": {
-      "applicationId": "theAppId",
-      "masterKey": "theMasterKey"
-  },
-  "parse_angular_bootstrap_staging": {
-      "applicationId": "theAppId",
-      "masterKey": "theMasterKey"
-  }
+  ...
 }
 ```
 
+Gruntfile.js
 ```javascript
 parseApps: {
   'development': 'parse_angular_bootstrap_development',
@@ -60,6 +55,18 @@ If you want to just run it
 
 `$ grunt test_functional`
 
+### Deploy
+
+`$ grunt deploy_to_development`
+
+`$ grunt deploy_to_tests`
+
+`$ grunt deploy_to_staging`
+
+
+## Developers
+
+@cv, @marano, @rafbgarcia
 
 
 ## License
