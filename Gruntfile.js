@@ -6,10 +6,11 @@ module.exports = function (grunt) {
 
     env: 'development',
 
+    // These are the apps you have in parse/config/global.json
     parseApps: {
-      'development': '',
-      'tests'      : '',
-      'staging'    : ''
+      'development': 'parse_angular_bootstrap_development',
+      'tests': 'parse_angular_bootstrap_tests',
+      'staging': 'parse_angular_bootstrap_staging'
     },
 
     bower: {

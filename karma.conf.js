@@ -1,4 +1,4 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path, that will be used to resolve files and exclude
@@ -60,7 +60,10 @@ module.exports = function(config) {
     browsers: ['ChromeNoSandbox'],
 
     customLaunchers: {
-      ChromeNoSandbox: { base: 'Chrome', flags: ['--no-sandbox'] }
+      ChromeNoSandbox: {
+        base: 'Chrome',
+        flags: ['--no-sandbox']
+      }
     },
 
 

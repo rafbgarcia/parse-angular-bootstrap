@@ -1,16 +1,26 @@
 'use strict';
 
 describe('General', function () {
-  var $rootScope, global;
+  var $rootScope;
 
   beforeEach(module('Helpers'));
-  beforeEach(inject(function (_$rootScope_, $window) {
+  beforeEach(inject(function (_$rootScope_) {
     $rootScope = _$rootScope_;
-    global = $window;
   }));
 
-  it('should be equal', function() {
-    expect(1).toEqual(1);
+  describe('assignVars', function () {
+    var User, assignVars;
+
+    beforeEach(inject(function (_User_, _assignVars_) {
+      User = _User_;
+      assignVars = _assignVars_;
+    }));
+
+    it('should assign a user with the current logged user function', function () {
+      spyOn(User, 'current').andReturn('theUser');
+      assignVars();
+      expect($rootScope.user).toEqual('theUser');
+    });
   });
 
 });

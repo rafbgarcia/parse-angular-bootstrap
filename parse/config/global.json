@@ -1,11 +1,19 @@
 {
     "applications": {
         "_default": {
-            "link": ""
+            "link": "parse_angular_bootstrap_development"
         },
-        "": {
-            "applicationId": "",
-            "masterKey": ""
+        "parse_angular_bootstrap_development": {
+            "applicationId": "theAppId",
+            "masterKey": "theMasterKey"
+        },
+        "parse_angular_bootstrap_tests": {
+            "applicationId": "theAppId",
+            "masterKey": "theMasterKey"
+        },
+        "parse_angular_bootstrap_staging": {
+            "applicationId": "theAppId",
+            "masterKey": "theMasterKey"
         }
     },
     "global": {
