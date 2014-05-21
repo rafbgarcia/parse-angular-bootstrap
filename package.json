@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "parse-angular-bootstrap",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -13,24 +13,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/app/app.git"
+    "url": "https://github.com/rafbgarcia/parse-angular-bootstrap.git"
   },
   "author": "deliberare",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/app/app/issues"
+    "url": "https://github.com/rafbgarcia/parse-angular-bootstrap/issues"
   },
-  "homepage": "https://github.com/app/app",
+  "homepage": "https://github.com/rafbgarcia/parse-angular-bootstrap",
   "devDependencies": {
     "express": "^4.2.0",
     "grunt": "^0.4.4",
     "grunt-bower-task": "^0.3.4",
     "grunt-cli": "^0.1.13",
-    "grunt-contrib-concat": "^0.4.0",
+    "grunt-contrib-htmlmin": "^0.3.0",
     "grunt-contrib-copy": "^0.5.0",
     "grunt-contrib-uglify": "^0.4.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-exec": "^0.4.5",
+    "grunt-jsbeautifier": "^0.2.7",
     "grunt-jslint": "^1.1.11",
     "grunt-karma": "^0.8.3",
     "grunt-protractor-runner": "~0.2.4",

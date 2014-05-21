@@ -20,10 +20,28 @@ module.exports = function (grunt) {
 
     copy: {
       fonts: {
-        files: [
-          { expand: true, cwd: 'lib/assets/vendor/bower/bootstrap-sass-official/vendor/assets/fonts/bootstrap', src: ['*'], dest: 'public/assets/bootstrap/', filter: 'isFile' },
-          { expand: true, cwd: 'lib/assets/vendor/bower/fontawesome/fonts', src: ['*'], dest: 'public/assets/fonts/fontawesome', filter: 'isFile' }
-        ]
+        files: [{
+          expand: true,
+          cwd: 'lib/assets/vendor/bower/bootstrap-sass-official/vendor/assets/fonts/bootstrap',
+          src: ['*'],
+          dest: 'parse/public/assets/fonts/bootstrap',
+          filter: 'isFile'
+        }, {
+          expand: true,
+          cwd: 'lib/assets/vendor/bower/fontawesome/fonts',
+          src: ['*'],
+          dest: 'parse/public/assets/fonts/fontawesome',
+          filter: 'isFile'
+        }]
+      },
+      images: {
+        files: [{
+          expand: true,
+          cwd: 'lib/assets/images',
+          src: ['*'],
+          dest: 'parse/public/assets/images',
+          filter: 'isFile'
+        }]
       }
     },
 
@@ -52,65 +70,112 @@ module.exports = function (grunt) {
       }
     },
 
+    htmlmin: {
+      dist: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: [{
+          expand: true,
+          cwd: 'lib/html/',
+          src: ['**/*'],
+          dest: 'parse/public/',
+          filter: 'isFile'
+        }, ]
+      },
+    },
+
     watch: {
       options: {
         nospawn: true
       },
       gruntfile: {
         files: ['Gruntfile.js', 'bower.json'],
-        tasks: ['concat']
+        tasks: ['build']
       },
       html: {
         files: ['lib/html/**/*.html'],
-        tasks: ['concat:html']
+        tasks: ['htmlmin']
       },
       styles: {
         files: ['lib/assets/css/**/*.scss'],
         tasks: ['sass']
       },
-      js: {
-        files: ['lib/**/*.js', '!lib/assets/js/vendor/js/*.js', 'config/routes.js'],
-        tasks: ['uglify:js']
+      vendor_js: {
+        files: ['lib/assets/vendor/**/*.js'],
+        tasks: ['uglify:vendor_js']
+      },
+      app_js: {
+        files: ['lib/**/*.js', 'config/**/*.js', '!lib/assets/vendor/**/*.js'],
+        tasks: ['uglify:app_js']
       }
     },
 
     uglify: {
       options: {
         mangle: false,
-        compress: false,
-        beautify: true
+        sourceMap: true,
+        sourceMapIncludeSources: true
       },
-      js: {
+
+      vendor_js: {
         options: {
-          separator: '\n;'
+          separator: '\n;',
+          compress: false,
+          beautify: false
         },
         files: {
-          'public/assets/config.js': ['lib/assets/js/config/<%= env %>.js'],
-          'public/assets/vendor.js': [
+          'parse/public/assets/vendor.js': [
             'lib/assets/vendor/bower/jquery/dist/jquery.js',
             'lib/assets/vendor/bower/lodash/dist/lodash.js',
             'lib/assets/vendor/bower/angular/angular.js',
             'lib/assets/vendor/bower/angular-ui-router/release/angular-ui-router.js',
-            'lib/assets/vendor/bower/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js',
-            'lib/assets/vendor/bower/bootstrap-sass-official/vendor/assets/javascripts/bootstrap/tooltip.js',
-            'lib/assets/vendor/bower/bootstrap-sass-official/vendor/assets/javascripts/**/*js',
             'lib/assets/vendor/bower/angular-bootstrap/ui-bootstrap-tpls.js',
             'lib/assets/vendor/js/**/*.js'
-          ],
-          'public/assets/lib.js': [
+          ]
+        }
+      },
+      app_js: {
+        options: {
+          separator: '\n;',
+          compress: false,
+          beautify: false
+        },
+        files: {
+          'parse/public/assets/config.js': ['lib/assets/js/config/<%= env %>.js'],
+          'parse/public/assets/lib.js': [
             'lib/assets/js/app/**/*.js',
             'lib/assets/js/initializers/*.js',
             'lib/init_modules.js',
             'config/routes.js'
           ],
-          'public/assets/helpers.js': ['lib/helpers/*.js'],
-          'public/assets/models.js': ['lib/models/*.js']
+          'parse/public/assets/helpers.js': ['lib/helpers/*.js'],
+          'parse/public/assets/models.js': ['lib/models/*.js'],
+          'parse/public/assets/controllers.js': ['lib/controllers/*.js']
+        }
+      }
+    },
+
+    jsbeautifier: {
+      files: [
+        '*.js',
+        'config/**/*.js',
+        'lib/*.js',
+        'lib/assets/js/**/*.js',
+        'lib/helpers/**/*.js',
+        'lib/models/js/**/*.js',
+        'spec/**/*.js'
+      ],
+      options: {
+        js: {
+          indentSize: 2,
+          jslintHappy: true,
         }
       }
     },
 
     jslint: {
-
       production: {
         directives: {
           browser: true,
@@ -122,14 +187,12 @@ module.exports = function (grunt) {
             '_'
           ]
         },
-
         src: [
           'lib/assets/js/**/*.js',
           'lib/helpers/**/*.js',
           'lib/models/**/*.js'
         ],
       },
-
       test: {
         directives: {
           node: true,
@@ -138,13 +201,12 @@ module.exports = function (grunt) {
           nomen: true,
           unparam: true,
           predef: [
-            '_',
-            'describe', 'it', 'browser', 'expect', 'beforeEach', 'spyOn', 'xit', 'jasmine', // karma and jasmine
-            'inject', // angular
+            '_', 'window',
+            'describe', 'it', 'browser', 'expect', 'beforeEach', 'spyOn', 'xit', 'jasmine', 'runs', 'waitsFor', // karma and jasmine
+            'inject', 'angular', // angular
             'element', 'by' // webdriver
           ]
         },
-
         src: [
           'spec/**/*.js',
         ],
@@ -164,44 +226,60 @@ module.exports = function (grunt) {
     },
 
     karma: {
-      unit: {
+      watch_unit: {
+        configFile: 'karma.conf.js',
+        singleRun: false
+      },
+      run_unit: {
         configFile: 'karma.conf.js'
       }
     },
 
     exec: {
+      clean: {
+        command: 'rm -rf parse/public/*'
+      },
+
       deploy: {
-        command: "parse deploy <%= parseApps[env] %> -d \"Deploying revision $(git rev-parse --short HEAD)\""
-      }
+        command: "cd parse && parse deploy <%= apps[env] %> -d \"Deploying revision $(git rev-parse --short HEAD)\""
+      },
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-protractor-runner');
   grunt.loadNpmTasks('grunt-exec');
   grunt.loadNpmTasks('grunt-jslint');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-jsbeautifier');
 
+
+  // Build
   grunt.registerTask('jslint:all', ['jslint:production', 'jslint:test']);
-  grunt.registerTask('build', ['bower:install', 'jslint:all', 'sass', 'concat', 'uglify', 'copy:fonts']);
+  grunt.registerTask('build', ['exec:clean', 'bower:install', 'jsbeautifier', 'jslint:all', 'sass', 'htmlmin', 'uglify', 'copy']);
+  grunt.registerTask('build_for_tests', ['sass', 'htmlmin', 'uglify', 'copy']);
   grunt.registerTask('default', ['build']);
 
-  grunt.registerTask('test_unit', ['tests_environment', 'build', 'karma:unit']);
-  grunt.registerTask('test_functional', ['tests_environment', 'build', 'protractor:test']);
 
+  // Tests
   grunt.registerTask('tests_environment', 'Set tests environment', setTestsEnvironment);
   grunt.registerTask('staging_environment', 'Set staging environment', setStagingEnvironment);
 
-  grunt.registerTask('deploy_to_development', ['build', 'exec:deploy', 'exec:announce']);
-  grunt.registerTask('deploy_to_staging', ['staging_environment', 'build', 'exec:deploy', 'exec:announce']);
-  grunt.registerTask('deploy_to_tests', ['tests_environment', 'build', 'exec:deploy', 'exec:announce']);
+  grunt.registerTask('test_unit', ['tests_environment', 'build_for_tests', 'karma:watch_unit']);
+  grunt.registerTask('run_test_unit', ['tests_environment', 'build_for_tests', 'karma:run_unit']);
+  grunt.registerTask('test_functional', ['tests_environment', 'build_for_tests', 'protractor:test']);
 
-  grunt.registerTask('ci', ['tests_environment', 'build', 'test_unit', 'exec:deploy', 'exec:announce', 'test_functional']);
+  // Deploy
+  grunt.registerTask('deploy_to_tests', ['tests_environment', 'build', 'exec:deploy']);
+  grunt.registerTask('deploy_to_staging', ['staging_environment', 'build', 'exec:deploy']);
+  grunt.registerTask('deploy_to_development', ['build', 'exec:deploy']);
+
+  grunt.registerTask('ci', ['tests_environment', 'build', 'run_test_unit', 'exec:deploy', 'test_functional']);
 
   function setStagingEnvironment() {
     grunt.config.set('env', 'staging');
